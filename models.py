@@ -6,8 +6,6 @@ import os
 import supervision as sv
 from supervision import VideoSink
 from ultralytics import YOLO
-from tqdm import tqdm
-from datetime import datetime
 import json
 
 # Load configuration from JSON file
