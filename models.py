@@ -18,6 +18,18 @@ CLASS_ID = config["CLASS_ID"]
 YOLO_VERSION = config["YOLO_VERSION"]
 
 def record_video(street, target_fps=5, duration=3600, recording_dir="recording"):
+    """
+    Record a video from a streaming URL and save it to a file.
+
+    Args:
+        street (dict): Dictionary containing information about the street including 'stream_url'.
+        target_fps (int, optional): Target frames per second for the output video. Default is 5.
+        duration (int, optional): Duration of the recording in seconds. Default is 3600 (1 hour).
+        recording_dir (str, optional): Directory where the recorded video will be saved. Default is 'recording'.
+
+    Returns:
+        str: Path to the saved video file or None if recording failed.
+    """
     print("Starting record_video function")
 
     if not os.path.exists(recording_dir):
@@ -84,17 +96,29 @@ day_period2time = {
 }
 
 def count_vehicles_and_annotate(street, source_video_path, day_period, date, day_period2time=day_period2time, annotated_dir="annotated"):
+    """
+    Annotate a video with vehicle detection and count the number of cars and motorcycles.
+
+    Args:
+        street (dict): Dictionary containing information about the street including start and end points.
+        source_video_path (str): Path to the source video file.
+        day_period (str): The period of the day (e.g., 'morning', 'afternoon', 'night').
+        date (str): The date of the recording.
+        day_period2time (dict, optional): Dictionary mapping day periods to time ranges. Default is predefined mapping.
+        annotated_dir (str, optional): Directory where the annotated video will be saved. Default is 'annotated'.
+
+    Returns:
+        list: List of dictionaries with counts of cars and motorcycles.
+    """
     print("Starting count_vehicles_and_annotate function")
 
     if not os.path.exists(annotated_dir):
-        os.mkdir(annotated_dir)
+        os.makedirs(annotated_dir)
         print(f"Created annotated directory: {annotated_dir}")
 
     start_point = sv.Point(street["start_x"], street["start_y"])
     end_point = sv.Point(street["end_x"], street["end_y"])
 
-    global line_zone
-    global detections
     line_zone = sv.LineZone(start=start_point, end=end_point)
     line_zone_annotator = sv.LineZoneAnnotator(thickness=2, text_thickness=2, text_scale=2)
     bounding_box_annotator = sv.BoundingBoxAnnotator(thickness=2)
@@ -170,7 +194,21 @@ def count_vehicles_and_annotate(street, source_video_path, day_period, date, day
     print("Function finished. Returning output.")
     return output
 
-def record_and_annotate_vehicles(street, day_period, date, recording_duration, annotated_dir="annotated", target_fps=5):
+def record_and_annotate_vehicles(street, day_period, date, recording_duration=30, annotated_dir="annotated", target_fps=5):
+    """
+    Record a video from a streaming URL and annotate it with vehicle detection and counting.
+
+    Args:
+        street (dict): Dictionary containing information about the street including 'stream_url' and coordinates.
+        day_period (str): The period of the day (e.g., 'morning', 'afternoon', 'night').
+        date (str): The date of the recording.
+        recording_duration (int, optional): Duration of the recording in seconds. Default is 30 seconds.
+        annotated_dir (str, optional): Directory where the annotated video will be saved. Default is 'annotated'.
+        target_fps (int, optional): Target frames per second for the output video. Default is 5.
+
+    Returns:
+        list: List of dictionaries with counts of cars and motorcycles.
+    """
     # Record the video
     source_video_path = record_video(street=street, duration=recording_duration, target_fps=target_fps)
     if source_video_path is None:
