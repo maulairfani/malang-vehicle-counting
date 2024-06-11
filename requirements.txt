@@ -1,0 +1,6 @@
+python-opencv
+moviepy
+ultralytics
+supervision
+tqdm
+numpy
