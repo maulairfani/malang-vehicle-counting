@@ -12,8 +12,8 @@ streets = [
     }
 ]
 
-street = streets[0]
-day_period = "night"
+street = streets[0] 
+day_period = "night" # should be 'morning' / 'afternoon' / 'night'
 date = datetime.today().strftime('%Y-%m-%d')
 duration = 5 # in seconds
 
